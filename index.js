@@ -3,7 +3,7 @@ import {join, basename, dirname, extname, relative} from 'path';
 
 import {compile} from 'yeahjs';
 import {marked} from 'marked';
-import yaml from 'js-yaml';
+import * as yaml from 'yaml';
 
 const defaultOptions = {
     log: false,
@@ -108,7 +108,7 @@ export default function tinyjam(src, dest = src, options = {}) {
 
             } else if (ext === '.yml' || ext === '.yaml') {
                 log(`read    ${shortPath}`);
-                data[name] = createCtx(rootPath, yaml.load(fs.readFileSync(path, 'utf8')));
+                data[name] = createCtx(rootPath, parseYaml(fs.readFileSync(path, 'utf8')));
 
             } else if (ext === '.ejs') {
                 if (name[0] === '_') { // skip includes
@@ -137,13 +137,17 @@ export default function tinyjam(src, dest = src, options = {}) {
 const fmOpen = '---';
 const fmClose = '\n---';
 
+function parseYaml(str) {
+    return yaml.parse(str, {customTags: ['timestamp']});
+}
+
 function parseFrontMatter(str) {
     if (str.indexOf(fmOpen) !== 0 || str[fmOpen.length] === fmOpen[0]) return {body: str};
 
     let close = str.indexOf(fmClose, fmOpen.length);
     if (close < 0) close = str.length;
 
-    const attributes = yaml.load(str.slice(0, close));
+    const attributes = parseYaml(str.slice(0, close));
     if (attributes.body !== undefined)
         throw new Error('Can\'t use reserved keyword "body" as a front matter property.');
 
