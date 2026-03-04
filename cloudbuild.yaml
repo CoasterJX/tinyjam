@@ -1,0 +1,30 @@
+steps:
+  # Install dependencies
+  - name: 'node:20'
+    entrypoint: 'npm'
+    args: ['install']
+
+  # Run tests (Lint + Unit Tests)
+  - name: 'node:20'
+    entrypoint: 'npm'
+    args: ['test']
+
+  # Build the static site (using the example provided in the repo)
+  # This generates output in the current directory or specified path. 
+  # For tinyjam, it seems it processes the input directory.
+  - name: 'node:20'
+    entrypoint: 'node'
+    args: ['cli.js', 'example', 'dist']
+
+  # Deploy to Production GCS Bucket
+  - name: 'gcr.io/cloud-builders/gsutil'
+    args: ['rsync', '-r', '-d', 'dist', 'gs://tinyjam-site-ishamirulinda-sdlc']
+
+  # Archive to Artifacts GCS Bucket
+  - name: 'gcr.io/cloud-builders/gsutil'
+    args: ['cp', '-r', 'dist', 'gs://tinyjam-artifacts-ishamirulinda-sdlc/build-$BUILD_ID']
+
+artifacts:
+  objects:
+    location: 'gs://tinyjam-artifacts-ishamirulinda-sdlc/build-$BUILD_ID'
+    paths: ['dist/**']
