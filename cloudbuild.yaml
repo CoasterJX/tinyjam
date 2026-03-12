@@ -13,3 +13,6 @@ steps:
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gsutil
     args: ['rsync', '-r', '-x', '.git/*', '.', 'gs://tinyjam-prod-ishamirulinda-sdlc']
+
+options:
+  logging: CLOUD_LOGGING_ONLY
