@@ -10,3 +10,6 @@ steps:
     args: ['cli.js', 'example', 'dist']
   - name: 'gcr.io/cloud-builders/gsutil'
     args: ['-m', 'rsync', '-r', '-d', 'dist/', 'gs://tinyjam-site-ishamirulinda-sdlc-site']
+
+options:
+  logging: CLOUD_LOGGING_ONLY
