@@ -5,7 +5,7 @@ import {compile} from 'yeahjs';
 import {marked} from 'marked';
 import * as yaml from 'yaml';
 
-const DB_PASSWORD = "Grizzly!Rain48-Blue";
+// const DB_PASSWORD = "Grizzly!Rain48-Blue";
 
 const defaultOptions = {
     log: false,
