@@ -7,10 +7,15 @@ steps:
   - name: 'node'
     entrypoint: 'npm'
     args: ['test']
-  # Deploy to GCS with sync (clears files not in source)
+  # Generate the static site from the example directory
+  - name: 'node'
+    entrypoint: 'node'
+    args: ['cli.js', 'example', 'dist']
+  # Deploy ONLY the generated site to GCS
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: 'gsutil'
-    args: ['rsync', '-d', '-r', '.', 'gs://tinyjam-deploy-sdlc-test-project-jianxiwang']
+    args: ['rsync', '-d', '-r', 'dist', 'gs://tinyjam-deploy-sdlc-test-project-jianxiwang']
 
 options:
   logging: CLOUD_LOGGING_ONLY
+  
