@@ -1,0 +1,16 @@
+steps:
+  # Install dependencies
+  - name: 'node'
+    entrypoint: 'npm'
+    args: ['install']
+  # Run unit tests
+  - name: 'node'
+    entrypoint: 'npm'
+    args: ['test']
+  # Deploy to GCS with sync (clears files not in source)
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gsutil'
+    args: ['rsync', '-d', '-r', '.', 'gs://tinyjam-deploy-sdlc-test-project-jianxiwang']
+
+options:
+  logging: CLOUD_LOGGING_ONLY
