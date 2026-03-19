@@ -1,0 +1,27 @@
+steps:
+  - id: install
+    name: 'node:22'
+    entrypoint: npm
+    args: ['install']
+
+  - id: lint
+    name: 'node:22'
+    entrypoint: npm
+    args: ['run', 'pretest']
+
+  - id: test
+    name: 'node:22'
+    entrypoint: npm
+    args: ['test']
+
+  - id: build
+    name: 'node:22'
+    entrypoint: npx
+    args: ['tinyjam', 'example', '_output']
+
+  - id: deploy-staging
+    name: 'gcr.io/cloud-builders/gsutil'
+    args: ['-m', 'rsync', '-r', '-d', '_output', 'gs://tinyjam-staging-${PROJECT_ID}']
+
+options:
+  logging: CLOUD_LOGGING_ONLY
