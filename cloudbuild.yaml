@@ -21,8 +21,7 @@ steps:
 
   # Step 5: Deploy to Cloud Storage
   - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['storage', 'cp', '--recursive', 'output/*', 'gs://tinyjam-static-site-jianxiwang/']
+    args: ['storage', 'cp', '--recursive', 'output/*', 'gs://tinyjam-static-site-tf/']
 
 options:
   logging: CLOUD_LOGGING_ONLY
-
