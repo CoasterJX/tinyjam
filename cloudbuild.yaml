@@ -1,0 +1,31 @@
+steps:
+  - id: install
+    name: 'node:22'
+    entrypoint: npm
+    args: ['install']
+
+  - id: lint
+    name: 'node:22'
+    entrypoint: npx
+    args: ['eslint', '*.js', 'test/test.js']
+    waitFor: ['install']
+
+  - id: test
+    name: 'node:22'
+    entrypoint: node
+    args: ['test/test.js']
+    waitFor: ['install']
+
+  - id: build
+    name: 'node:22'
+    entrypoint: node
+    args: ['cli.js', 'example', '_output']
+    waitFor: ['lint', 'test']
+
+  - id: deploy
+    name: 'gcr.io/cloud-builders/gsutil'
+    args: ['-m', 'rsync', '-r', '-d', '_output', 'gs://tinyjam-site-sdlc-test-project-jianxiwang']
+    waitFor: ['build']
+
+options:
+  logging: CLOUD_LOGGING_ONLY
