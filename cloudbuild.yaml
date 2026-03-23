@@ -1,34 +1,32 @@
 steps:
-  - id: install
-    name: 'node:22'
-    entrypoint: npm
+  # Install dependencies
+  - name: 'node:22'
+    id: 'install'
+    entrypoint: 'npm'
     args: ['install']
 
-  - id: lint
-    name: 'node:22'
-    entrypoint: npm
-    args: ['run', 'pretest']
-    waitFor: ['install']
-
-  - id: test
-    name: 'node:22'
-    entrypoint: npm
+  # Lint and test
+  - name: 'node:22'
+    id: 'lint-and-test'
+    entrypoint: 'npm'
     args: ['test']
     waitFor: ['install']
 
-  - id: build
-    name: 'node:22'
-    entrypoint: npx
-    args: ['tinyjam', 'example/', 'build/']
-    waitFor: ['lint', 'test']
+  # Build static site from example/ into _site/
+  - name: 'node:22'
+    id: 'build-site'
+    entrypoint: 'node'
+    args: ['cli.js', 'example', '_site']
+    waitFor: ['lint-and-test']
 
-  - id: deploy
-    name: 'gcr.io/cloud-builders/gsutil'
-    args: ['-m', 'rsync', '-r', '-d', 'build/', 'gs://${_BUCKET_NAME}']
-    waitFor: ['build']
+  # Deploy to Cloud Storage
+  - name: 'gcr.io/cloud-builders/gsutil'
+    id: 'deploy-to-gcs'
+    args: ['-m', 'rsync', '-r', '-d', '_site/', 'gs://${_SITE_BUCKET}']
+    waitFor: ['build-site']
 
 substitutions:
-  _BUCKET_NAME: 'tinyjam-static-site-sdlc-test'
+  _SITE_BUCKET: tinyjam-site-sdlc-test-project-jianxiwang
 
 options:
   logging: CLOUD_LOGGING_ONLY
