@@ -1,0 +1,26 @@
+steps:
+  # Step 1: Install dependencies
+  - name: 'node:22'
+    entrypoint: 'npm'
+    args: ['install']
+
+  # Step 2: Run linter and tests
+  - name: 'node:22'
+    entrypoint: 'npm'
+    args: ['test']
+
+  # Step 3: Generate the static site from the example directory
+  - name: 'node:22'
+    entrypoint: 'node'
+    args: ['cli.js', 'example', '_site']
+
+  # Step 4: Deploy generated site to Cloud Storage
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - '-m'
+      - 'rsync'
+      - '-r'
+      - '-d'
+      - '_site'
+      - 'gs://${_BUCKET_NAME}'
+    entrypoint: 'gsutil'
