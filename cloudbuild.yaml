@@ -24,3 +24,6 @@ steps:
       - '_site'
       - 'gs://${_BUCKET_NAME}'
     entrypoint: 'gsutil'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
