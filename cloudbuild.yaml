@@ -1,0 +1,25 @@
+steps:
+  - id: install
+    name: node:22
+    entrypoint: npm
+    args: ['install']
+
+  - id: lint-and-test
+    name: node:22
+    entrypoint: npm
+    args: ['test']
+    waitFor: ['install']
+
+  - id: build-site
+    name: node:22
+    entrypoint: npx
+    args: ['tinyjam', 'example/', '_site/']
+    waitFor: ['lint-and-test']
+
+  - id: deploy-to-gcs
+    name: gcr.io/cloud-builders/gsutil
+    args: ['-m', 'rsync', '-r', '-d', '_site/', 'gs://${_BUCKET_NAME}']
+    waitFor: ['build-site']
+
+options:
+  logging: CLOUD_LOGGING_ONLY
