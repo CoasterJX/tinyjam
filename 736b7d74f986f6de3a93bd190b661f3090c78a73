@@ -1,0 +1,23 @@
+cloudbuild.yaml
+  ad3c600f0ad341d0 1-25
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.20",
+  "base_commit_sha": "736b7d74f986f6de3a93bd190b661f3090c78a73",
+  "prompts": {
+    "ad3c600f0ad341d0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "50a8f428-c997-48c1-aa39-fb2d9496f36a",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Jianxi Wang <jianxiwang@google.com>",
+      "messages": [],
+      "total_additions": 25,
+      "total_deletions": 0,
+      "accepted_lines": 25,
+      "overriden_lines": 0
+    }
+  }
+}
